@@ -40,7 +40,7 @@ func (c *Client) Users(ctx context.Context, workspaceID uint64) ([]User, error) 
 	}
 	vals := make(url.Values)
 	vals.Add("id", strconv.FormatUint(workspaceID, 10))
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v4/workspace_users/get"+"?"+vals.Encode(), nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v1/workspace_users/get"+"?"+vals.Encode(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (c *Client) Thread(ctx context.Context, threadID uint64) (*Thread, error) {
 	}
 	vals := make(url.Values)
 	vals.Add("id", strconv.FormatUint(threadID, 10))
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v3/threads/getone"+"?"+vals.Encode(), nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v1/threads/getone"+"?"+vals.Encode(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +83,7 @@ func (c *Client) Thread(ctx context.Context, threadID uint64) (*Thread, error) {
 
 // Workspaces returns all the workspaces user has access to.
 func (c *Client) Workspaces(ctx context.Context) ([]Workspace, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v3/workspaces/get", nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v1/workspaces/get", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -107,7 +107,7 @@ func (c *Client) Channels(ctx context.Context, workspaceID uint64) ([]Channel, e
 	}
 	vals := make(url.Values)
 	vals.Add("workspace_id", strconv.FormatUint(workspaceID, 10))
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v3/channels/get"+"?"+vals.Encode(), nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v1/channels/get"+"?"+vals.Encode(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -271,7 +271,7 @@ func (c *Client) getNewChannelThreadsPage(ctx context.Context, channelID, sinceT
 	vals.Add("channel_id", strconv.FormatUint(channelID, 10))
 	vals.Add("limit", strconv.Itoa(maxThreadsPerPage))
 	vals.Add("newer_than_ts", strconv.FormatUint(sinceTimestamp, 10))
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, "https://comms.todoist.com/api/v3/threads/get", strings.NewReader(vals.Encode()))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, "https://comms.todoist.com/api/v1/threads/get", strings.NewReader(vals.Encode()))
 	if err != nil {
 		return nil, err
 	}
@@ -308,7 +308,7 @@ func (c *Client) getChannelThreadsPage(ctx context.Context, channelID, afterID u
 		vals.Add("after_id", strconv.FormatUint(afterID, 10))
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, "https://comms.todoist.com/api/v3/threads/get", strings.NewReader(vals.Encode()))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, "https://comms.todoist.com/api/v1/threads/get", strings.NewReader(vals.Encode()))
 	if err != nil {
 		return nil, err
 	}
@@ -427,7 +427,7 @@ func (c *Client) getNewThreadCommentsPage(ctx context.Context, threadID, sinceTi
 	vals.Add("thread_id", strconv.FormatUint(threadID, 10))
 	vals.Add("limit", strconv.Itoa(maxCommentsPerPage))
 	vals.Add("newer_than_ts", strconv.FormatUint(sinceTimestamp, 10))
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v3/comments/get"+"?"+vals.Encode(), nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v1/comments/get"+"?"+vals.Encode(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -463,7 +463,7 @@ func (c *Client) getThreadCommentsPage(ctx context.Context, threadID uint64, fro
 	// API returns results including both {from,to}_obj_index, it calculates
 	// result like [from_obj_index, to_obj_index][:limit]
 	vals.Add("to_obj_index", strconv.Itoa(fromIndex+maxCommentsPerPage-1))
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v3/comments/get"+"?"+vals.Encode(), nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v1/comments/get"+"?"+vals.Encode(), nil)
 	if err != nil {
 		return nil, err
 	}

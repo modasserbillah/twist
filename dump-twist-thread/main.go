@@ -205,7 +205,7 @@ func dumpChat(ctx context.Context, cache bool, token, url string) error {
 	}
 
 	const limit = 500
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v3/conversation_messages/get?conversation_id="+m[1]+"&limit="+strconv.Itoa(limit), nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v1/conversation_messages/get?conversation_id="+m[1]+"&limit="+strconv.Itoa(limit), nil)
 	if err != nil {
 		return err
 	}
