@@ -38,11 +38,11 @@ func main() {
 func run(ctx context.Context, cache bool, threadURL string) error {
 	pruneCache()
 	if threadURL == "" {
-		return errors.New("want Twist thread url as the first argument")
+		return errors.New("want Comms thread url as the first argument")
 	}
-	token := os.Getenv("TWIST_TOKEN")
+	token := os.Getenv("COMMS_TOKEN")
 	if token == "" {
-		return errors.New("please set TWIST_TOKEN env")
+		return errors.New("please set COMMS_TOKEN env")
 	}
 	if strings.Contains(threadURL, "/msg/") {
 		// TODO: consolidate logic?
@@ -99,12 +99,12 @@ func run(ctx context.Context, cache bool, threadURL string) error {
 	return err
 }
 
-var twistThreadURL = regexp.MustCompile(`^https://twist\.com/a/(\d+)/ch/(\d+)/t/(\d+)/?$`)
+var commsThreadURL = regexp.MustCompile(`^https://comms\.todoist\.com/a/(\d+)/ch/(\d+)/t/(\d+)/?$`)
 
 func tidFromURL(url string) (*tid, error) {
-	m := twistThreadURL.FindStringSubmatch(url)
+	m := commsThreadURL.FindStringSubmatch(url)
 	if m == nil {
-		return nil, fmt.Errorf("%q does not match %v", url, twistThreadURL)
+		return nil, fmt.Errorf("%q does not match %v", url, commsThreadURL)
 	}
 	var out tid
 	var err error
@@ -184,17 +184,17 @@ func init() {
 	flag.Usage = func() {
 		w := flag.CommandLine.Output()
 		fmt.Fprintf(w, "Usage: %s URL\n", os.Args[0])
-		fmt.Fprintln(w, "URL is a Twist thread url you can get with “Copy link to thread” action")
+		fmt.Fprintln(w, "URL is a Comms thread url you can get with “Copy link to thread” action")
 		flag.PrintDefaults()
 	}
 }
 
-var twistChatURL = regexp.MustCompile(`^\Qhttps://twist.com/a/\E(?:\d+)/msg/(\d+)/$`)
+var commsChatURL = regexp.MustCompile(`^\Qhttps://comms.todoist.com/a/\E(?:\d+)/msg/(\d+)/$`)
 
 func dumpChat(ctx context.Context, cache bool, token, url string) error {
-	m := twistChatURL.FindStringSubmatch(url)
+	m := commsChatURL.FindStringSubmatch(url)
 	if m == nil {
-		return fmt.Errorf("%q does not match %v", url, twistChatURL)
+		return fmt.Errorf("%q does not match %v", url, commsChatURL)
 	}
 
 	if cache {
@@ -205,7 +205,7 @@ func dumpChat(ctx context.Context, cache bool, token, url string) error {
 	}
 
 	const limit = 500
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://api.twist.com/api/v3/conversation_messages/get?conversation_id="+m[1]+"&limit="+strconv.Itoa(limit), nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://comms.todoist.com/api/v3/conversation_messages/get?conversation_id="+m[1]+"&limit="+strconv.Itoa(limit), nil)
 	if err != nil {
 		return err
 	}
